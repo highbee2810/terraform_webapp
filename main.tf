@@ -18,6 +18,18 @@ data "aws_ami" "ubuntu" {
   }
 }
 
+resource "aws_vpc" "main" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+
+  tags = {
+    Name        = "web_server-vpc"
+    Environment = "myenvironment"
+  }
+}
+
+
 # Security Group to allow SSH and HTTP access
 resource "aws_security_group" "web_sg" {
   name        = "ec2-security-group"
@@ -52,20 +64,12 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
-# EC2 Instance Resource
 resource "aws_instance" "web_server" {
-  ami                  = data.aws_ami.ubuntu.id
-  instance_type        = var.instance_type
-  key_name             = var.key_name
-  vpc_security_group_ids = [aws_security_group.web_sg.id]
-
-  # Allocate a 20 GB GP3 storage volume
-  root_block_device {
-    volume_size           = 20
-    volume_type           = "gp3"
-    delete_on_termination = true
-  }
-
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = var.instance_type
+  key_name                    = var.key_name               
+  vpc_security_group_ids      = [aws_security_group.web_sg.id]
+  associate_public_ip_address = true # Ensures AWS assigns a standard public IP
   tags = {
     Name        = var.instance_name
     Environment = "Dev"
