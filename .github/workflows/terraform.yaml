@@ -19,3 +19,6 @@ jobs:
 
       - name: Check Terraform Formatting for error
         run: terraform fmt -check -recursive
+
+      - name: Initialize Terraform
+        run: terraform init
