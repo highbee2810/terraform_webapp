@@ -1,5 +1,5 @@
 provider "aws" {
-    region = "us-east-1"
+  region = "us-east-1"
 }
 
 # Fetch the latest official Ubuntu 22.04 LTS AMI dynamically
@@ -67,7 +67,7 @@ resource "aws_security_group" "web_sg" {
 resource "aws_instance" "web_server" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
-  key_name                    = var.key_name               
+  key_name                    = var.key_name
   vpc_security_group_ids      = [aws_security_group.web_sg.id]
   associate_public_ip_address = true # Ensures AWS assigns a standard public IP
   tags = {
