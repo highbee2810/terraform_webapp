@@ -9,6 +9,11 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+
 
     steps:
       - name: Checkout Repository
@@ -19,5 +24,11 @@ jobs:
 
       - name: Check Terraform Formatting for error
         run: terraform fmt -check -recursive
+      - name: Initialize Terraform
+        run: terraform init
+      - name: Validate Terraform Configuration
+        run: terraform validate
+      - name: Plan Terraform Deployment
+        run: terraform plan
 
       
